@@ -10,15 +10,15 @@
 	   (if (not (forward-same-level-or-false)) (error "Didn't manage to go forward!"))
 	   (if (not (org-up-heading-safe)) (error "Couldn't go up a level"))
 	   (org-narrow-to-subtree)
-	   (org-next-visible-heading 1)
+	   (org-next-visible-heading 1) ;; this will go DOWN a level
 	   (message "got 0; point %s" (point))
-	   (while (forward-same-level-or-false) ;; TODO:this is accidentally skipping the first
+	   (while  (progn 
 	     (message "got 1")
-	     (let ((nothing  (message "got 2")) (current-headline (org-element-headline-parser (point-max))))c
+	     (let ((nothing  (message "got 2")) (current-headline (org-element-headline-parser (point-max))))
 	       (push-mark)      
 	       (message "current header: %s" current-headline)
 	       )
-	     )
+	     (forward-same-level-or-false))   )
 	   (message "I did it: weeks: [%d]" weeks )
 	   )
 	 )
