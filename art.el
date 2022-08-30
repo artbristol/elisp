@@ -20,6 +20,19 @@
 					  (push current-headline headlines)
 					  )
 					(forward-same-level-or-false))   )
+	
+			       ;; for each headline, un-schedule
+			       ;; set a variable sched = current date
+			       ;; for each headline (in reverse order) schedule, increment sched by weeks
+			       (dolist (headline headlines) (message "I'm in headline %s" headline )
+					;			       (debug)
+				       (let* ((wat (car (cdr headline))) (the-begin (plist-get wat ':begin))  )
+	;				 (debug)
+					 (goto-char the-begin)
+					 )
+			       (org-schedule 1 "+1w")
+			       
+				       )
 			       (message "I did it: headlines: [%d]" (length headlines) )
 			       )
 	   )
