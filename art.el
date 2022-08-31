@@ -19,8 +19,9 @@
 					  (push current-headline headlines)
 					  )
 					(forward-same-level-or-false))   )	
-			       (dolist (headline headlines) (message "I'm in headline %s" headline )
+			       (dolist (headline (reverse headlines)) (message "I'm in headline %s" headline )
 				       (goto-char (plist-get (car (cdr headline)) ':begin))	
+				       ;; no need to unschedule, org-schedule will wipe
 				       (org-schedule 1 "+1w")
 				       )
 			       (message "I did it: headlines: [%d]" (length headlines) )
