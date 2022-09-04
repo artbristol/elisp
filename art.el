@@ -11,21 +11,23 @@
 	   (if (not (org-up-heading-safe)) (error "Couldn't go up a level"))
 	   (org-narrow-to-subtree)
 	   (org-next-visible-heading 1) ;; this will go DOWN a level
-	   (message "got 0; point %s" (point))
 	   (let ((headlines ())) 
-			       (while (progn 
-					(let ((current-headline (org-element-headline-parser (point-max))))
-					  (message "current header: %s" current-headline)
-					  (push current-headline headlines)
-					  )
-					(forward-same-level-or-false))   )	
-			       (dolist (headline (reverse headlines)) (message "I'm in headline %s" headline )
-				       (goto-char (plist-get (car (cdr headline)) ':begin))	
-				       ;; no need to unschedule, org-schedule will wipe
-				       (org-schedule 1 "+1w")
-				       )
-			       (message "I did it: headlines: [%d]" (length headlines) )
-			       )
+	     (while (progn
+		      (let ((current-headline (org-element-headline-parser (point-max))))
+			(push current-headline headlines)
+			)
+		      (forward-same-level-or-false)))
+	     (let ((curr-week (* weeks  (length headlines))))
+	       (dolist (headline headlines)
+
+		 (goto-char (plist-get (car (cdr headline)) ':begin))
+		 		 (message "I'm in headline %s; going to char %d" headline (point) )
+		       ;; no need to unschedule, org-schedule will wipe
+				   (org-schedule 1 (format "+%dw" curr-week))
+		       (setq curr-week (- curr-week weeks))
+		       ))
+	     (message "I did it: headlines: [%d]" (length headlines) )
+	     )
 	   )
 	 )
        )
