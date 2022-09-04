@@ -23,7 +23,8 @@
 		 (goto-char (plist-get (car (cdr headline)) ':begin))
 		 		 (message "I'm in headline %s; going to char %d" headline (point) )
 		       ;; no need to unschedule, org-schedule will wipe
-				   (org-schedule 1 (format "+%dw" curr-week))
+				 (org-schedule 1 (format "+%dw" curr-week))
+				 ;; TODO add ++%dw for weeks recurrence
 		       (setq curr-week (- curr-week weeks))
 		       ))
 	     (message "I did it: headlines: [%d]" (length headlines) )
