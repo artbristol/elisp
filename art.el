@@ -11,7 +11,9 @@
 	   (if (not (org-up-heading-safe)) (error "Couldn't go up a level"))
 	   (org-narrow-to-subtree)
 	   (org-next-visible-heading 1) ;; this will go DOWN a level
-	   (let ((headlines ())) 
+	   (let ((headlines ()) (target-level -1))
+	     (setq target-level (plist-get (car (cdr (org-element-headline-parser (point-max)))) ':level))
+	     (message "target-level: %d" target-level)
 	     (while (progn
 		      (let ((current-headline (org-element-headline-parser (point-max))))
 			(push current-headline headlines)
@@ -42,3 +44,25 @@
 
 	     
 
+
+(defun another-rejig (weeks) "refactor rejig to use org-map-entries"
+       (interactive "p")
+              (save-excursion
+	 (save-restriction
+	   ;; assume we're on a scheduled TODO - TODO:check
+	   ;; go up a level
+	   
+	   (if (not (forward-same-level-or-false)) (error "Didn't manage to go forward!"))
+	   (if (not (org-up-heading-safe)) (error "Couldn't go up a level"))
+	   (org-narrow-to-subtree)
+	   (org-next-visible-heading 1) ;; this will go DOWN a level
+
+	   (let ((headlines ()))
+	     (org-map-entries
+	      (lambda () (message "lambda was called" ))
+	      nil
+					;   'region-start-level
+	      )
+	     )
+	   )
+	 ))
