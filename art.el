@@ -21,6 +21,7 @@
 	     (let ((curr-week 0))
     	       (org-map-entries
 		(lambda ()
+		  (org-schedule '(4)) ; this is the best I can do to un-schedule
 	    	  (org-schedule 1 (format "+%dw" curr-week))
 	    	  (setq curr-week (+ curr-week weeks))
 		  )
