@@ -22,16 +22,27 @@
     	       (org-map-entries
 		(lambda ()
 	    	  (org-schedule 1 (format "+%dw" curr-week))
-	    	  ;; TODO add ++%dw for weeks recurrence
 	    	  (setq curr-week (+ curr-week weeks))
 		  )
 		(format "+LEVEL=%d" target-level))
 	       )
+	     (org-map-entries
+	      (lambda ()
+		(let* (
+		       (current-headline (org-element-headline-parser (point-max)))
+		       (current-scheduled (plist-get (car (cdr current-headline)) ':scheduled))
+		       )
+					; TODO it would be better to use a proper org- function to do the below
+		  (goto-char (- (plist-get (car (cdr current-scheduled)) ':end) 1))
+		  (insert " " (format "++%dw" (* weeks headline-count)))
+                  ))
+	      (format "+LEVEL=%d" target-level))
 	     (message "I did it: headlines: [%d]" headline-count )
 	     )
 	   )
 	 )
        )
+
 
 (defun forward-same-level-or-false () "moves forward by a heading or returns false"
        (interactive)
