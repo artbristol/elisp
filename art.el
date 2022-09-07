@@ -1,7 +1,10 @@
 					; test stuffs
 
 
-(defun rejig-schedule (weeks) "spreads the TODO SCHEDULED:s evenly" (interactive "p")
+(defun rejig-schedule (multiple week-or-day) "spreads the TODO SCHEDULED:s evenly"
+       (interactive "nMultiple: \nMWeek (w) or day (d): ")
+       (if (not (string-match "^[wd]$" week-or-day)) (error "must be w or d"))
+       (if (not (> multiple 0)) (error "must be > 0"))
        (save-excursion
 	 (save-restriction
 	   ;; assume we're on a scheduled TODO - TODO:check
@@ -22,8 +25,8 @@
     	       (org-map-entries
 		(lambda ()
 		  (org-schedule '(4)) ; this is the best I can do to un-schedule
-	    	  (org-schedule 1 (format "+%dw" curr-week))
-	    	  (setq curr-week (+ curr-week weeks))
+	    	  (org-schedule 1 (format "+%d%s" curr-week week-or-day))
+	    	  (setq curr-week (+ curr-week multiple))
 		  )
 		(format "+LEVEL=%d" target-level))
 	       )
@@ -35,7 +38,7 @@
 		       )
 					; TODO it would be better to use a proper org- function to do the below
 		  (goto-char (- (plist-get (car (cdr current-scheduled)) ':end) 1))
-		  (insert " " (format "++%dw" (* weeks headline-count)))
+		  (insert " " (format "++%d%s" (* multiple headline-count) week-or-day))
                   ))
 	      (format "+LEVEL=%d" target-level))
 	     (message "I did it: headlines: [%d]" headline-count )
@@ -46,7 +49,6 @@
 
 
 (defun forward-same-level-or-false () "moves forward by a heading or returns false"
-       (interactive)
        (let ((lastpoint (point))  )
 	 (org-forward-heading-same-level 1)
 	 (if  (> (point) lastpoint) t nil )
