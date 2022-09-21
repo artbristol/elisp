@@ -1,4 +1,7 @@
-					; test stuffs
+					;TODO:
+					; add tests
+					; use https://github.com/alphapapa/ts.el for time handling
+
 
 
 (defun rejig-schedule (multiple week-or-day) "spreads the TODO SCHEDULED:s evenly"
